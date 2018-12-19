@@ -1,13 +1,14 @@
 package com.tdh.gps.console.web.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.authentication.TokenExtractor;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
@@ -39,10 +40,14 @@ public class SsoResourceServerConfigurer extends ResourceServerConfigurerAdapter
 	private TokenStore tokenStore;
 	@Autowired(required = false)
 	private JwtAccessTokenConverter jwtAccessTokenConverter;
+	@Autowired
+	@Qualifier("customTokenExtractor")
+	private TokenExtractor tokenExtractor;
 
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) {
-		resources.resourceId(RESOURCE_ID).stateless(false).tokenServices(tokenServices()).tokenStore(tokenStore);
+		resources.resourceId(RESOURCE_ID).stateless(false).tokenServices(tokenServices()).tokenStore(tokenStore)
+				.tokenExtractor(tokenExtractor);
 	}
 
 	@Override
