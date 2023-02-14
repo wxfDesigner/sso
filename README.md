@@ -1,5 +1,5 @@
 # sso
-sso you like
+Sso what you like
 
 Please add mongodb collections and records as below:
 
